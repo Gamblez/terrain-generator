@@ -62,7 +62,6 @@ function draw() {
 }
 
 
-
 function generateLand() {
   background(0);
   rotateX(0.8);
@@ -79,7 +78,6 @@ function generateLand() {
     for (let y = -canvasSize / 2; y < canvasSize / 2; y += tileSize) {
       let landNoiseVal = noise((x + canvasSize / 2) / 100, (y + canvasSize / 2) / 100);
       let forestNoiseVal = noise((x + canvasSize / 2) / 50, (y + canvasSize / 2) / 50);
-      // z = noise(x * res + width / 2, y * res + depth) * terrHeight;
       let z = map(landNoiseVal, 0, 1, -terrHeight / 2, terrHeight / 2);
 
       drawTile(x, y, z, landNoiseVal, forestNoiseVal);
@@ -153,7 +151,8 @@ function drawTile(x, y, z, landNoiseVal, forestNoiseVal) {
       if (random() < mappedWoodDensity) {
         // tileColor = variedColor(woodColorBase);
         //tree
-        // fillTileTree(x, y, z);  
+        // fillTileTree(x, y, z);
+        let tree = true;
         fillTile(woodColorBase, x, y, z);
         treeTiles++;
       } else {
