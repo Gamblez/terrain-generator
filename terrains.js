@@ -48,9 +48,10 @@ function setup() {
   blockNumberInput = select('#blockNumberInput');
   let generateButton = select('#generateButton');
   generateButton.mousePressed(generateFromInput);
+
   canvas = createCanvas(canvasSize, canvasSize, WEBGL); // WEBGL starts drawing in [0,0,0] which is the middle.
   background(255);
-  
+
   noLoop();
   // noiseSeed(591986);
 }
@@ -66,18 +67,14 @@ function generateLand() {
   background(0);
   rotateX(0.8);
   rotateZ(0.2)
-  
+
   // Reset tile counters
   waterTiles = 0;
   earthTiles = 0;
   treeTiles = 0;
   goldTiles = 0;
   oreTiles = 0;
-  
-  // for (let x = 0; x < width; x += tileSize) {
-  //   for (let y = 0; y < height; y += tileSize) {
-  //     let landNoiseVal = noise(x / 100, y / 100);
-  //     let forestNoiseVal = noise(x / 50, y / 50);
+
   for (let x = -canvasSize / 2; x < canvasSize / 2; x += tileSize) {
     for (let y = -canvasSize / 2; y < canvasSize / 2; y += tileSize) {
       let landNoiseVal = noise((x + canvasSize / 2) / 100, (y + canvasSize / 2) / 100);
@@ -86,13 +83,12 @@ function generateLand() {
       let z = map(landNoiseVal, 0, 1, -terrHeight / 2, terrHeight / 2);
 
       drawTile(x, y, z, landNoiseVal, forestNoiseVal);
-  
 
     push();
     translate(x, y, z);
     box(cubesize, cubesize);
     pop();
-  
+
   // Update statistics next to the generated image
   updateStats();
 }    }
@@ -108,59 +104,7 @@ function variedColor(baseColor) {
   );
 }
 
-// function drawTile(x, y, z, landNoiseVal, forestNoiseVal) {
-//   seaNoiseThreshold = getSeaNoiseThreshold();
-
-//   let baseColor;
-  
-//   // Adjust z for water tiles to ensure they are lower or at a consistent elevation
-//   if (landNoiseVal < seaNoiseThreshold) {
-//     z = -terrHeight / 4; // Example adjustment, ensuring water tiles are visually distinct
-//     baseColor = seaColorBase;
-//     waterTiles++;
-//   } else {
-//     // Land or forest tile, z is used as calculated
-//     if (forestNoiseVal > landNoiseThreshold) {
-//       let nonce = getNonce(); // Get nonce from the CSV
-//       let mappedWoodDensity = map(nonce, 1028694, 4288169963, 0.6, 0.9);
-
-//       if (random() < mappedWoodDensity) {
-//         baseColor = woodColorBase;
-//         treeTiles++;
-//       } else {
-//         baseColor = landColorBase;
-//         earthTiles++;
-//       }
-//     } else {
-//       let feeReward = getFeeReward(); // Get fee reward from the CSV
-//       let mappedPreciousVeinsDensity = map(feeReward, 0, 9679, 0.008, 0.03);
-
-//       let hashInput = getHash(); // Get hash from the CSV
-//       let mappedOreVeinsDensity = map(hashInput, 19, 30, 0.008, 0.05);
-
-//       if (random() < mappedPreciousVeinsDensity) {
-//         baseColor = preciousColorBase;
-//         goldTiles++;
-//       } else if (random() < mappedOreVeinsDensity) {
-//         baseColor= oreColorBase;
-//         oreTiles++;
-//       } else {
-//         baseColor = landColorBase;
-//         earthTiles++;
-//     }
-//   }}
-//   let tileColor = variedColor(baseColor);
-//   fill(tileColor); // Apply the determined color
-
-//   push(); // Save current drawing state
-//   translate(x + tileSize / 2, y + tileSize / 2, z + tileSize / 2); // Positioning the tile correctly in 3D space
-//   noStroke(); // Remove stroke for a cleaner look
-//   box(tileSize); // Draw the box with the given tileSize
-//   pop(); // Restore previous drawing state
-
-// }
-
-function fillTile(colorBase, x, y, z) { 
+function fillTile(colorBase, x, y, z) {
     tileColor = variedColor(colorBase);
 
     fill(tileColor); // Apply the determined color
@@ -195,9 +139,9 @@ function fillTileTree(x, y, z) {
 function drawTile(x, y, z, landNoiseVal, forestNoiseVal) {
   seaNoiseThreshold = getSeaNoiseThreshold();
   let tileColor;
-  
+
   if (landNoiseVal < seaNoiseThreshold) {
-    
+
     // tileColor = variedColor(seaColorBase);
     fillTile(seaColorBase, x, y, z);
     waterTiles++;
@@ -327,11 +271,11 @@ function getSeaNoiseThreshold() {
   // let blockNumber = int(blockNumberInput.value());
   // let blockNumber = int(591986);
   let row = table.findRow(String(blockNumber), 'number');
-  
+
   if (row) {
     // Map weight to seaNoiseThreshold between 0.33 and 0.5
     return map(row.getNum('weight'), 3998741, 32984, 0.33, 0.5);
-    
+
   } else {
     console.log(`Weight not found for block number ${blockNumber}`);
     return 0.4; // Default value
