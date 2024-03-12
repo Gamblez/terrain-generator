@@ -11,8 +11,13 @@ const preciousColorBase = [252, 252, 0];
 
 // Size of each tile (in pixels)
 const tileSize = 5;
-const enableDrag = true;
-const test = true;
+
+const enableDrag = false;  // enables dragging of the image
+const test = true;  // disables some front-end elements and enables hard-coded seed
+const enableRotate = true;
+const rotateSpeed = 3;
+const useFrameRate = 60;
+
 
 // Tile counters
 let waterTiles = 0;
@@ -42,18 +47,30 @@ let dragging = false;
 let row;
 
 
+
 function draw() {
   background(0);
+  rotateX(0.8);
   
   if (enableDrag){
     dragIt();
+  }
+  
+  if (enableRotate) {
+      let angle = radians(frameCount) * rotateSpeed;
+      rotateZ(angle);
+    
+      // let time = millis() / 1000; // Current time in seconds
+      // angle = radians(rotationSpeed * time); // Convert speed to radians per second and multiply by elapsed time
+      // rotateZ(angle);
+
   }
 
   generateFromInput();
 }
 
 function dragIt(){
-    if (dragging) {
+  if (dragging) {
     angleY += (mouseX - prevMouseX) * 0.01;
     angleX += (mouseY - prevMouseY) * 0.01;
   }
@@ -87,29 +104,33 @@ function preload() {
 function setup() {
   
   // Get the input and button from the HTML file
-  // let blockNumberInput = int(591986);
+
   
   blockNumberInput = select('#blockNumberInput');
   noiseSeed(blockNumberInput);
   
   let generateButton = select('#generateButton');
-  generateButton.mousePressed(generateFromInput);
   
+  if (test){
+      blockNumberInput = int(591986);
+  } else {
+    generateButton.mousePressed(generateFromInput);
+  }
+  console.log(blockNumberInput);
   row = table.findRow(String(blockNumberInput), 'number');
   
   canvas = createCanvas(canvasSize, canvasSize, WEBGL); // WEBGL starts drawing in [0,0,0] which is the middle.
   background(255);
   
-  if (enableDrag){
-    frameRate(1)
+  if (enableDrag || enableRotate){
+    frameRate(useFrameRate);
   } else {noLoop();}
 
 }
 
 function generateLand() {
   background(0);
-  rotateX(0.8);
-  rotateZ(0.2);
+
 
   // Reset tile counters
   waterTiles = 0;
@@ -131,8 +152,8 @@ function generateLand() {
     box(cubesize, cubesize);
     pop();
 
-  // Update statistics next to the generated image
-  updateStats();
+    // Update statistics next to the generated image
+    updateStats();
 }    }
   }
 
@@ -253,16 +274,16 @@ function generateFromInput() {
     generateLand();
 
     // Log the counts
-    console.log(`Water Area: ${waterTiles}`);
-    console.log(`Earth Area: ${earthTiles}`);
-    console.log(`Tree Area: ${treeTiles}`);
-    console.log(`Ore Area: ${oreTiles}`);
-    console.log(`Gold Area: ${goldTiles}`);
+    // console.log(`Water Area: ${waterTiles}`);
+    // console.log(`Earth Area: ${earthTiles}`);
+    // console.log(`Tree Area: ${treeTiles}`);
+    // console.log(`Ore Area: ${oreTiles}`);
+    // console.log(`Gold Area: ${goldTiles}`);
 
     // Show the canvas after generating
     canvas.show();
   } else {
-    console.log(`Block number ${blockNumber} not found in the CSV.`);
+    console.log(`Block number ${blockNumberInput} not found in the CSV.`);
   }
 }
 
