@@ -11,6 +11,8 @@ const preciousColorBase = [252, 252, 0];
 
 // Size of each tile (in pixels)
 const tileSize = 5;
+const enableDrag = true;
+const test = true;
 
 // Tile counters
 let waterTiles = 0;
@@ -42,8 +44,16 @@ let row;
 
 function draw() {
   background(0);
+  
+  if (enableDrag){
+    dragIt();
+  }
 
-  if (dragging) {
+  generateFromInput();
+}
+
+function dragIt(){
+    if (dragging) {
     angleY += (mouseX - prevMouseX) * 0.01;
     angleX += (mouseY - prevMouseY) * 0.01;
   }
@@ -55,8 +65,6 @@ function draw() {
   // Update previous mouse position
   prevMouseX = mouseX;
   prevMouseY = mouseY;
-
-  generateFromInput();
 }
 
 function mousePressed() {
@@ -73,27 +81,29 @@ function mouseReleased() {
 function preload() {
   // Load the CSV file using the raw URL
   let csvUrl = 'https://raw.githack.com/TerraBitsNAS/TerraBits/main/terra.csv';
-  table = loadTable(csvUrl, 'csv', 'header');
-
-  
+  table = loadTable(csvUrl, 'csv', 'header'); 
 }
 
 function setup() {
+  
   // Get the input and button from the HTML file
-  // blockNumberInput = select('#blockNumberInput');
-  let blockNumberInput = int(591986);
+  // let blockNumberInput = int(591986);
+  
+  blockNumberInput = select('#blockNumberInput');
   noiseSeed(blockNumberInput);
   
   let generateButton = select('#generateButton');
-  // generateButton.mousePressed(generateFromInput);
+  generateButton.mousePressed(generateFromInput);
   
   row = table.findRow(String(blockNumberInput), 'number');
   
   canvas = createCanvas(canvasSize, canvasSize, WEBGL); // WEBGL starts drawing in [0,0,0] which is the middle.
   background(255);
+  
+  if (enableDrag){
+    frameRate(1)
+  } else {noLoop();}
 
-  // noLoop();
-  frameRate(1)
 }
 
 function generateLand() {
@@ -162,7 +172,7 @@ function fillTileTree(x, y, z) {
 
         fill(100,map(y,0,90,255,100),100);
         translate(0,-14,0);
-        sphere(cubesize*0.85, 6, 6);
+        sphere(cubesize*0.7, 6, 6);
     }
     pop();
 }
@@ -185,8 +195,8 @@ function drawTile(x, y, z, landNoiseVal, forestNoiseVal) {
       if (random() < mappedWoodDensity) {
         // tileColor = variedColor(woodColorBase);
         //tree
-        // fillTileTree(x, y, z);
-        fillTile(woodColorBase, x, y, z);
+        fillTileTree(x, y, z);
+        // fillTile(woodColorBase, x, y, z);
         treeTiles++;
       } else {
         // tileColor = variedColor(landColorBase);
