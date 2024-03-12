@@ -43,31 +43,31 @@ let row;
 function draw() {
   background(0);
 
-//   if (dragging) {
-//     angleY += (mouseX - prevMouseX) * 0.01;
-//     angleX += (mouseY - prevMouseY) * 0.01;
-//   }
+  // if (dragging) {
+  //   angleY += (mouseX - prevMouseX) * 0.01;
+  //   angleX += (mouseY - prevMouseY) * 0.01;
+  // }
   
-//   // Apply rotation based on mouse movement
-//   rotateX(angleX);
-//   rotateY(angleY);
+  // // Apply rotation based on mouse movement
+  // rotateX(angleX);
+  // rotateY(angleY);
 
-//   // Update previous mouse position
-//   prevMouseX = mouseX;
-//   prevMouseY = mouseY;
+  // // Update previous mouse position
+  // prevMouseX = mouseX;
+  // prevMouseY = mouseY;
 
   generateFromInput();
 }
 
-// function mousePressed() {
-//   dragging = true;
-//   prevMouseX = mouseX;
-//   prevMouseY = mouseY;
-// }
+function mousePressed() {
+  dragging = true;
+  prevMouseX = mouseX;
+  prevMouseY = mouseY;
+}
 
-// function mouseReleased() {
-//   dragging = false;
-// }
+function mouseReleased() {
+  dragging = false;
+}
 
 
 function preload() {
